@@ -1,0 +1,180 @@
+<div style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+    Income Tax Computation<br>
+    Financial year: {{ doc.start_date }} to {{ doc.end_date }}<br>
+    Assessment year: {{ doc.assessment_year }}
+</div>
+
+<div style="border: 1px solid #000; padding: 10px; margin-bottom: 20px;">
+    <h4 style="background: #99CC00; color: #000; padding: 5px;">Part-A: Basic Information</h4>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td><b>Name:</b></td>
+            <td>{{ doc.employee_name }}</td>
+            <td><b>Resident Status:</b></td>
+            <td>{{ doc.resident_status or "Bangladeshi" }}</td>
+        </tr>
+        <tr>
+            <td><b>Designation:</b></td>
+            <td>{{ doc.designation }}</td>
+            <td><b>Date of Joining:</b></td>
+            <td>{{ doc.final_confirmation_date }}</td>
+        </tr>
+        <tr>
+            <td><b>E-TIN Number:</b></td>
+            <td>{{ doc.ntn }}</td>
+            <td><b>Gender:</b></td>
+            <td>{{ doc.gender }}</td>
+        </tr>
+        <tr>
+            <td><b>Mobile:</b></td>
+            <td>{{ doc.employee_mobile }}</td>
+            <td><b>Department:</b></td>
+            <td>{{ doc.employee_department }}</td>
+        </tr>
+    </table>
+</div>
+
+<div style="border: 1px solid #000; padding: 10px;">
+    <h4 style="background: #99CC00; color: #000; padding: 5px;">Part-B: Total Salary Amount</h4>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background: #f2f2f2; border-bottom: 1px solid #000;">
+                <th style="border: 1px solid #000; padding: 5px;">Sl. No.</th>
+                <th style="border: 1px solid #000; padding: 5px;">Month</th>
+                <th style="border: 1px solid #000; padding: 5px; text-align: right;">Amount</th>
+                <th style="border: 1px solid #000; padding: 5px;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;"></td>
+                <td style="border: 1px solid #000; padding: 5px;">{{ doc.start_date }}</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">{{ doc.gross_pay }}</td>
+                <td style="border: 1px solid #000; padding: 5px;"></td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td colspan="2" style="border: 1px solid #000; padding: 5px; text-align: right;">Total:</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">{{ doc.gross_year_to_date }}</td>
+                <td style="border: 1px solid #000; padding: 5px;"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div style="border: 1px solid #000; padding: 10px;">
+    <h4 style="background: #99CC00; color: #000; padding: 5px;">Part-C: Taxable Income Calculation</h4>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background: #f2f2f2; border-bottom: 1px solid #000;">
+                <th style="border: 1px solid #000; padding: 5px;">Sl. No.</th>
+                <th style="border: 1px solid #000; padding: 5px;">Description</th>
+                <th style="border: 1px solid #000; padding: 5px; text-align: right;">Amount (Tk.)</th>
+                <th style="border: 1px solid #000; padding: 5px;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">1</td>
+                <td style="border: 1px solid #000; padding: 5px;">Gross Salary</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">{{ doc.gross_pay }}</td>
+                <td style="border: 1px solid #000; padding: 5px;">As per salary breakdown</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">2</td>
+                <td style="border: 1px solid #000; padding: 5px;">Exemption (Lower of 1/3 of gross salary or Tk. 450,000)</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">{{ doc.gross_pay / 3  }}</td>
+                <td style="border: 1px solid #000; padding: 5px;">Maximum allowed exemption</td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td colspan="2" style="border: 1px solid #000; padding: 5px; text-align: right;">Total Taxable Income:</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">{{ doc.gross_pay }}</td>
+                <td style="border: 1px solid #000; padding: 5px;">After exemption</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div style="border: 1px solid #000; padding: 10px; margin-top: 20px;">
+    <h4 style="background: #99CC00; color: #000; padding: 5px;">Part-D: Tax Slab</h4>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background: #f2f2f2;">
+                <th style="border: 1px solid #000; padding: 5px; text-align: center;">Slab</th>
+                <th style="border: 1px solid #000; padding: 5px; text-align: center;">Rate (%)</th>
+                <th style="border: 1px solid #000; padding: 5px; text-align: center;">Amount (Tk.)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">On the first Tk. 350,000 / Tk. 400,000</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">0%</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">350,000</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">On the next Tk. 100,000</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">5%</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">100,000</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">On the next Tk. 400,000</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">10%</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">400,000</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">On the next Tk. 500,000</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">15%</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">500,000</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">On the next Tk. 2,000,000</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">25%</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">2,000,000</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px;">Above Tk. 20,000,000</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">30%</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">2,200,000</td>
+            </tr>
+            <tr style="font-weight: bold; background: #e6f7ff;">
+                <td colspan="2" style="border: 1px solid #000; padding: 5px; text-align: right;">Gross Tax Liability:</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">1,380,000</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="border: 1px solid #000; padding: 10px; margin-top: 20px;">
+    <h4 style="background: #99CC00; color: #000; padding: 5px;">Part-E: Investment Rebate</h4>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background: #f2f2f2;">
+                <th style="border: 1px solid #000; padding: 5px; text-align: center;">#</th>
+                <th style="border: 1px solid #000; padding: 5px;">Criteria</th>
+                <th style="border: 1px solid #000; padding: 5px; text-align: right;">Amount (Tk.)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">1</td>
+                <td style="border: 1px solid #000; padding: 5px;">Allowable Limit (3% of Total Income)</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">6,050,000</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">2</td>
+                <td style="border: 1px solid #000; padding: 5px;">Actual Investment</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">181,500</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #000; padding: 5px; text-align: center;">3</td>
+                <td style="border: 1px solid #000; padding: 5px;">15% of Total Invest</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">-</td>
+            </tr>
+            <tr style="font-weight: bold; background: #e6f7ff;">
+                <td colspan="2" style="border: 1px solid #000; padding: 5px; text-align: right;">Rebate Amount (Whichever is lower of 1 & 2):</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">1,000,000</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

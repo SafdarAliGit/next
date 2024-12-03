@@ -1,0 +1,73 @@
+<div style="font-family: Arial, sans-serif; font-size: 12px; width: 100%; border-collapse: collapse; margin: 0 auto; border: 1px solid #ddd; padding: 10px;">
+    <h2 style="text-align: center;">Employee {{ doc.employee_name }} - {{ doc.start_date }}</h2>
+    <p style="text-align: center;">{{ doc.total_working_days }} days per month (8 hrs per day) Per Month Salary</p>
+
+    {% set pkr_to_usd_rate = 278.3 %}
+
+    <h3 style="background-color: #f0f0f0; padding: 10px;">Details of Employee Cost</h3>
+    <table style="width: 100%; border: 1px solid #ddd; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr>
+                <th style="padding: 10px;">Earnings</th>
+                <th style="padding: 10px;">Amount (PKR)</th>
+                <th style="padding: 10px;">Amount (USD)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for earning in doc.earnings if earning.salary_component not in ["Gratuity", "Provident Fund", "State Taxes / SESSI"] %}
+            <tr>
+                <td style="padding: 10px;">{{ earning.salary_component }}</td>
+                <td style="padding: 10px;">{{ earning.amount }}</td>
+                <td style="padding: 10px;">{{ (earning.amount / pkr_to_usd_rate) | round(2) }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td style="padding: 10px;">Gross Pay</td>
+                <td style="padding: 10px;">{{ doc.gross_pay }}</td>
+                <td style="padding: 10px;">{{ (doc.gross_pay / pkr_to_usd_rate) | round(2) }}</td>
+            </tr>
+            {% for deduction in doc.deductions if deduction.salary_component not in ["Gratuity", "Provident Fund", "State Taxes / SESSI"] %}
+            <tr>
+                <td style="padding: 10px;">{{ deduction.salary_component }}</td>
+                <td style="padding: 10px;">{{ deduction.amount }}</td>
+                <td style="padding: 10px;">{{ (deduction.amount / pkr_to_usd_rate) | round(2) }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td style="padding: 10px;"><strong>Employee Take Home (NET)</strong></td>
+                <td style="padding: 10px;"><strong>{{ doc.net_pay }}</strong></td>
+                <td style="padding: 10px;"><strong>{{ (doc.net_pay / pkr_to_usd_rate) | round(2) }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="background-color: #f0f0f0; padding: 10px; margin-top: 20px;">Specific Employee Contributions</h3>
+    <table style="width: 100%; border: 1px solid #ddd; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr>
+                <th style="padding: 10px;">Contribution</th>
+                <th style="padding: 10px;">Amount (PKR)</th>
+                <th style="padding: 10px;">Amount (USD)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Gratuity from Earnings -->
+            {% for earning in doc.earnings if earning.salary_component == "Gratuity" %}
+            <tr>
+                <td style="padding: 10px;">{{ earning.salary_component }}</td>
+                <td style="padding: 10px;">{{ earning.amount }}</td>
+                <td style="padding: 10px;">{{ (earning.amount / pkr_to_usd_rate) | round(2) }}</td>
+            </tr>
+            {% endfor %}
+
+            <!-- Provident Fund and State Taxes from Deductions -->
+            {% for deduction in doc.deductions if deduction.salary_component in ["Provident Fund", "State Taxes / SESSI"] %}
+            <tr>
+                <td style="padding: 10px;">{{ deduction.salary_component }}</td>
+                <td style="padding: 10px;">{{ deduction.amount }}</td>
+                <td style="padding: 10px;">{{ (deduction.amount / pkr_to_usd_rate) | round(2) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
